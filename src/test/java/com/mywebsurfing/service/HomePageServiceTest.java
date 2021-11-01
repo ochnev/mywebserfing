@@ -1,25 +1,23 @@
 package com.mywebsurfing.service;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith({ MockitoExtension.class, SpringExtension.class})
-@ActiveProfiles("test")
 class HomePageServiceTest {
-
-//    @MockBean
-    @Autowired
-    private HomePageService service;
 
     @Test
     public void test() {
-        assertNotNull(service);
+        HomePageService service = new HomePageServiceImpl();
+        List<String> realms = service.getRealms();
+        List<String> mediaTypes = service.getMediaTypes();
+        List<String> managedAreas = service.getManagedAreas();
+        assertEquals(Arrays.asList("Learning languages", "Event announcements", "Social, etc."), realms);
+        assertEquals(Arrays.asList("Text", "Audio", "Video", "Messenger channels", "Messenger chats"), mediaTypes);
+        assertEquals(Arrays.asList("Bookmarks", "Random reminders", "Spaced repetition"), managedAreas);
     }
 
 }
