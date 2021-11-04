@@ -1,0 +1,3 @@
+CREATE DATABASE myweb;
+
+CREATE DATABASE mywebtest;
