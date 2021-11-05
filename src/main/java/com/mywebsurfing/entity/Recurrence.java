@@ -1,8 +1,10 @@
 package com.mywebsurfing.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,16 +21,27 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @Entity
 public class Recurrence {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Boolean started;
+
     private ZonedDateTime lastStart;
+
     private ZonedDateTime lastFinish;
+
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "app_user_id")
     private AppUser appUser;
+
+    @ToString.Exclude
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
+
 }

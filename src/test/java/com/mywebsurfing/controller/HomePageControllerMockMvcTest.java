@@ -32,7 +32,7 @@ class HomePageControllerMockMvcTest {
         this.mockMvc.perform(get("/home"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("announcements")));
+                .andExpect(content().string(containsString("IT")));
     }
 
     @AfterEach
