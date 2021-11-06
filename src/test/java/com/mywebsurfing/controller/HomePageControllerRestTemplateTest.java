@@ -26,8 +26,8 @@ public class HomePageControllerRestTemplateTest {
     }
 
     @Test
-    public void greetingShouldReturnDefaultMessage() {
-        String contents = this.restTemplate.getForObject(url, String.class);
+    public void homePageShouldContainText() {
+        String contents = restTemplate.getForObject(url, String.class);
         assertTrue(contents.contains("IT"));
     }
 
