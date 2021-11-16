@@ -39,7 +39,7 @@ class DataImportServiceTest {
     @Autowired
     private BookmarkRepository bookmarkRepository;
 
-    private AppUser defaultUser = new AppUser(null,
+    private final AppUser defaultUser = new AppUser(null,
             "Default User",
             "user1",
             "secure123",
@@ -63,11 +63,46 @@ class DataImportServiceTest {
         List<Folder> folders = folderRepository.findAll();
         List<Bookmark> bookmarks = bookmarkRepository.findAll();
 
-        // TODO: check contents with more details
         assertEquals(2, realms.size());
+        Realm realm1 = realms.get(0);
+        Realm realm2 = realms.get(1);
+        assertEquals("IT", realm1.getName());
+        assertEquals(defaultUser.getId(), realm1.getAppUser().getId());
+        assertEquals("Languages", realm2.getName());
+        assertEquals(defaultUser.getId(), realm2.getAppUser().getId());
+
         assertEquals(2, realmsForUser.size());
+        Realm realm1u = realmsForUser.get(0);
+        Realm realm2u = realmsForUser.get(1);
+        assertEquals(defaultUser.getId(), realm1u.getAppUser().getId());
+        assertEquals("IT", realm1u.getName());
+        assertEquals(defaultUser.getId(), realm1u.getAppUser().getId());
+        assertEquals("Languages", realm2u.getName());
+
         assertEquals(3, folders.size());
+        Folder folder1 = folders.get(0);
+        Folder folder2 = folders.get(1);
+        Folder folder3 = folders.get(2);
+        assertEquals(realm1u.getId(), folder1.getRealm().getId());
+        assertEquals("Blockchain", folder1.getName());
+        assertEquals(realm1u.getId(), folder2.getRealm().getId());
+        assertEquals("Blockchain and Java", folder2.getName());
+        assertEquals(realm2u.getId(), folder3.getRealm().getId());
+        assertEquals("German", folder3.getName());
+
         assertEquals(3, bookmarks.size());
+        Bookmark bookmark1 = bookmarks.get(0);
+        Bookmark bookmark2 = bookmarks.get(1);
+        Bookmark bookmark3 = bookmarks.get(2);
+        assertEquals(folder1.getId(), bookmark1.getFolder().getId());
+        assertEquals("https://www.npmjs.com/package/create-eth-app", bookmark1.getUrl());
+        assertEquals("Create Eth App", bookmark1.getTitle());
+        assertEquals(folder2.getId(), bookmark2.getFolder().getId());
+        assertEquals("https://ethereum.org/en/developers/docs/programming-languages/java/", bookmark2.getUrl());
+        assertEquals("ETHEREUM FOR JAVA DEVELOPERS", bookmark2.getTitle());
+        assertEquals(folder3.getId(), bookmark3.getFolder().getId());
+        assertEquals("https://www.youtube.com/watch?v=RuGmc662HDg&list=PLF9mJC4RrjIhS4MMm0x72-qWEn1LRvPuW", bookmark3.getUrl());
+        assertEquals("German for beginners - A1", bookmark3.getTitle());
     }
 
     @AfterEach
