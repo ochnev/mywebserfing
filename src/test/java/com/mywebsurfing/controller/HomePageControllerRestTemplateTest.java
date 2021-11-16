@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HomePageControllerRestTemplateTest {
 
@@ -28,7 +30,8 @@ public class HomePageControllerRestTemplateTest {
     @Test
     public void homePageShouldContainText() {
         String contents = restTemplate.getForObject(url, String.class);
-        assertTrue(contents.contains("IT"));
+        // TODO: make different checks after the service is completed
+        assertTrue(contents.contains("[") && contents.contains("]"));
     }
 
 }
