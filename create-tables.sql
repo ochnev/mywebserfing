@@ -21,6 +21,14 @@ CREATE TABLE folder (
     PRIMARY KEY(id)
 );
 
+CREATE TABLE link_collection (
+    id BIGSERIAL,
+    name VARCHAR(150) NOT NULL,
+    url VARCHAR(250) NOT NULL,
+    realm_id BIGINT NOT NULL REFERENCES realm(id),
+    PRIMARY KEY(id)
+);
+
 CREATE TABLE bookmark (
     id BIGSERIAL,
     url VARCHAR(250) NOT NULL,
