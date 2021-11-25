@@ -59,9 +59,12 @@ public class DataImportServiceImpl implements DataImportService {
                 // create a link collection
                 String url = parts[2];
                 String name = parts[3];
-                LinkCollection linkCollection = linkCollectionRepository.findByUrlAndRealm(url, realm);
+                LinkCollection linkCollection = existingLinkCollections.get(url);
                 if (linkCollection == null) {
-                    linkCollection = createLinkCollection(name, url, realm);
+                    linkCollection = linkCollectionRepository.findByUrlAndRealm(url, realm);
+                    if (linkCollection == null) {
+                        linkCollection = createLinkCollection(name, url, realm);
+                    }
                 }
                 existingLinkCollections.put(url, linkCollection);
 
