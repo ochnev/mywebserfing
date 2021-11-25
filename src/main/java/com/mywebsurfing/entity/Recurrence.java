@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import java.time.ZonedDateTime;
 
 @Data
@@ -26,6 +25,10 @@ public class Recurrence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String url;
+
+    private String title;
+
     private Boolean started;
 
     private ZonedDateTime lastStart;
@@ -37,11 +40,5 @@ public class Recurrence {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "app_user_id")
     private AppUser appUser;
-
-    @ToString.Exclude
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "bookmark_id")
-    private Bookmark bookmark;
 
 }

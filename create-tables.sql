@@ -39,10 +39,11 @@ CREATE TABLE bookmark (
 
 CREATE TABLE recurrence (
     id BIGSERIAL,
+    url VARCHAR(250) NOT NULL,
+    title VARCHAR(150) NOT NULL,
     started BOOLEAN,
     last_start TIMESTAMP,
     last_finish TIMESTAMP,
     app_user_id BIGINT NOT NULL REFERENCES app_user(id),
-    bookmark_id BIGINT NOT NULL REFERENCES bookmark(id),
     PRIMARY KEY(id)
 );

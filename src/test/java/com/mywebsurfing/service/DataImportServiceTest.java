@@ -3,10 +3,12 @@ package com.mywebsurfing.service;
 import com.mywebsurfing.entity.AppUser;
 import com.mywebsurfing.entity.Bookmark;
 import com.mywebsurfing.entity.Folder;
+import com.mywebsurfing.entity.LinkCollection;
 import com.mywebsurfing.entity.Realm;
 import com.mywebsurfing.repository.AppUserRepository;
 import com.mywebsurfing.repository.BookmarkRepository;
 import com.mywebsurfing.repository.FolderRepository;
+import com.mywebsurfing.repository.LinkCollectionRepository;
 import com.mywebsurfing.repository.RealmRepository;
 
 import org.junit.jupiter.api.AfterEach;
@@ -37,6 +39,9 @@ class DataImportServiceTest {
     private FolderRepository folderRepository;
 
     @Autowired
+    private LinkCollectionRepository linkCollectionRepository;
+
+    @Autowired
     private BookmarkRepository bookmarkRepository;
 
     private final AppUser defaultUser = new AppUser(null,
@@ -54,13 +59,15 @@ class DataImportServiceTest {
     @Test
     void testImportData() {
         String csvData = "IT;Blockchain;https://www.npmjs.com/package/create-eth-app;Create Eth App\n" +
-                "IT;Blockchain and Java;https://ethereum.org/en/developers/docs/programming-languages/java/;ETHEREUM FOR JAVA DEVELOPERS\n" +
+                "IT;;https://github.com/crytic/awesome-ethereum-security;Awesome Ethereum Security\n" +
+                "IT;Blockchain and Java;https://ethereum.org/en/developers/docs/programming-languages/java/;Ethereum for Java developers\n" +
                 "Languages;German;https://www.youtube.com/watch?v=RuGmc662HDg&list=PLF9mJC4RrjIhS4MMm0x72-qWEn1LRvPuW;German for beginners - A1";
         dataImportService.importData(csvData, defaultUser);
 
         List<Realm> realms = realmRepository.findAll();
         List<Realm> realmsForUser = realmRepository.findByAppUser(defaultUser);
         List<Folder> folders = folderRepository.findAll();
+        List<LinkCollection> linkCollections = linkCollectionRepository.findAll();
         List<Bookmark> bookmarks = bookmarkRepository.findAll();
 
         assertEquals(2, realms.size());
@@ -90,6 +97,12 @@ class DataImportServiceTest {
         assertEquals(realm2u.getId(), folder3.getRealm().getId());
         assertEquals("German", folder3.getName());
 
+        assertEquals(1, linkCollections.size());
+        LinkCollection linkCollection1 = linkCollections.get(0);
+        assertEquals(realm1.getId(), linkCollection1.getRealm().getId());
+        assertEquals("https://github.com/crytic/awesome-ethereum-security", linkCollection1.getUrl());
+        assertEquals("Awesome Ethereum Security", linkCollection1.getName());
+
         assertEquals(3, bookmarks.size());
         Bookmark bookmark1 = bookmarks.get(0);
         Bookmark bookmark2 = bookmarks.get(1);
@@ -99,7 +112,7 @@ class DataImportServiceTest {
         assertEquals("Create Eth App", bookmark1.getTitle());
         assertEquals(folder2.getId(), bookmark2.getFolder().getId());
         assertEquals("https://ethereum.org/en/developers/docs/programming-languages/java/", bookmark2.getUrl());
-        assertEquals("ETHEREUM FOR JAVA DEVELOPERS", bookmark2.getTitle());
+        assertEquals("Ethereum for Java developers", bookmark2.getTitle());
         assertEquals(folder3.getId(), bookmark3.getFolder().getId());
         assertEquals("https://www.youtube.com/watch?v=RuGmc662HDg&list=PLF9mJC4RrjIhS4MMm0x72-qWEn1LRvPuW", bookmark3.getUrl());
         assertEquals("German for beginners - A1", bookmark3.getTitle());
@@ -107,10 +120,11 @@ class DataImportServiceTest {
 
     @AfterEach
     private void tearDown() {
-        appUserRepository.deleteAll();
-        realmRepository.deleteAll();
-        folderRepository.deleteAll();
         bookmarkRepository.deleteAll();
+        folderRepository.deleteAll();
+        linkCollectionRepository.deleteAll();
+        realmRepository.deleteAll();
+        appUserRepository.deleteAll();
     }
 
 }
