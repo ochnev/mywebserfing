@@ -118,6 +118,42 @@ class DataImportServiceTest {
         assertEquals("German for beginners - A1", bookmark3.getTitle());
     }
 
+    @Test
+    void testImportOneLineForBookmark() {
+        String line = "IT;Blockchain and Java;https://ethereum.org/en/developers/docs/programming-languages/java/;Ethereum for Java developers";
+        dataImportService.importData(line, defaultUser);
+
+        List<Realm> realms = realmRepository.findAll();
+        List<Realm> realmsForUser = realmRepository.findByAppUser(defaultUser);
+        List<Folder> folders = folderRepository.findAll();
+        List<LinkCollection> linkCollections = linkCollectionRepository.findAll();
+        List<Bookmark> bookmarks = bookmarkRepository.findAll();
+
+        assertEquals(1, realms.size());
+        assertEquals(1, realmsForUser.size());
+        assertEquals(1, folders.size());
+        assertEquals(0, linkCollections.size());
+        assertEquals(1, bookmarks.size());
+    }
+
+    @Test
+    void testImportOneLineForLinkCollection() {
+        String line = "IT;;https://github.com/crytic/awesome-ethereum-security;Awesome Ethereum Security";
+        dataImportService.importData(line, defaultUser);
+
+        List<Realm> realms = realmRepository.findAll();
+        List<Realm> realmsForUser = realmRepository.findByAppUser(defaultUser);
+        List<Folder> folders = folderRepository.findAll();
+        List<LinkCollection> linkCollections = linkCollectionRepository.findAll();
+        List<Bookmark> bookmarks = bookmarkRepository.findAll();
+
+        assertEquals(1, realms.size());
+        assertEquals(1, realmsForUser.size());
+        assertEquals(0, folders.size());
+        assertEquals(1, linkCollections.size());
+        assertEquals(0, bookmarks.size());
+    }
+
     @AfterEach
     private void tearDown() {
         bookmarkRepository.deleteAll();

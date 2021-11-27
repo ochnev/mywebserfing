@@ -41,35 +41,49 @@ public class DataImportServiceImpl implements DataImportService {
         Map<String, Bookmark> existingBookmarks = new HashMap<>();
 
         String[] lines = csvFileData.split("\n");
-        Arrays.stream(lines).forEach(line -> {
-            String[] parts = line.split(";");
-
-            String realmName = parts[0];
-            Realm realm = checkAndCreateRealm(realmName, user, existingRealms);
-
-            String folderName = parts[1];
-            if(folderName == null || folderName.isBlank()) {
-                // create a link collection
-                String url = parts[2];
-                String name = parts[3];
-                checkAndCreateLinkCollection(name, url, realm, existingLinkCollections);
-            } else {
-                // create a folder and a bookmark
-                Folder folder = checkAndCreateFolder(folderName, realm, existingFolders);
-                String url = parts[2];
-                String title = parts[3];
-                checkAndCreateBookmark(url, title, folder, existingBookmarks);
-            }
-
+        DataImportReport report = Arrays.stream(lines)
+                .map(line -> importOneLine(line, user, existingRealms, existingFolders, existingLinkCollections, existingBookmarks))
+                .reduce(new DataImportReport(), (r1, r2) -> {
+            int nRealms = r1.getRealms() + r2.getRealms();
+            int nFolders = r1.getFolders() + r2.getFolders();
+            int nLinkCollections = r1.getLinkCollections() + r2.getLinkCollections();
+            int nBookmarks = r1.getBookmarks() + r2.getBookmarks();
+            return new DataImportReport(nRealms, nFolders, nLinkCollections, nBookmarks);
         });
-
-        return new DataImportReport(existingRealms.size(), existingFolders.size(), existingBookmarks.size());
+        return report;
     }
 
     @Override
     public DataImportReport importOneLine(String dataLine, AppUser user) {
-        // TODO
-        return new DataImportReport(0, 0, 0);
+        return importOneLine(dataLine, user, new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>());
+    }
+
+    private DataImportReport importOneLine(String dataLine,
+                                          AppUser user,
+                                          Map<String, Realm> existingRealms,
+                                          Map<String, Folder> existingFolders,
+                                          Map<String, LinkCollection> existingLinkCollections,
+                                          Map<String, Bookmark> existingBookmarks) {
+
+        String[] parts = dataLine.split(";");
+        String realmName = parts[0];
+        Realm realm = checkAndCreateRealm(realmName, user, existingRealms);
+
+        String folderName = parts[1];
+        if(folderName == null || folderName.isBlank()) {
+            // create a link collection
+            String url = parts[2];
+            String name = parts[3];
+            checkAndCreateLinkCollection(name, url, realm, existingLinkCollections);
+        } else {
+            // create a folder and a bookmark
+            Folder folder = checkAndCreateFolder(folderName, realm, existingFolders);
+            String url = parts[2];
+            String title = parts[3];
+            checkAndCreateBookmark(url, title, folder, existingBookmarks);
+        }
+
+        return new DataImportReport(existingRealms.size(), existingFolders.size(), existingLinkCollections.size(), existingBookmarks.size());
     }
 
     private Realm checkAndCreateRealm(String realmName, AppUser user, Map<String, Realm> existingRealms) {
