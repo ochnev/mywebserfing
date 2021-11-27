@@ -23,4 +23,11 @@ public class DataImportController extends BaseController {
         return dataImportService.importData(csvFileData, user);
     }
 
+    @PostMapping("/data/import/oneline")
+    public DataImportReport importOneLine(@RequestBody String dataLine) {
+        // TODO: do a more appropriate thing to get the current user
+        final AppUser user = getOrCreateUser();
+        return dataImportService.importOneLine(dataLine, user);
+    }
+
 }

@@ -5,4 +5,5 @@ import com.mywebsurfing.entity.AppUser;
 
 public interface DataImportService {
     DataImportReport importData(String csvFileData, AppUser user);
+    DataImportReport importOneLine(String dataLine, AppUser user);
 }
