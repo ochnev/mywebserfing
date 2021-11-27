@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class HomePageController {
+public class HomePageController extends BaseController{
 
     @Autowired
     private HomePageService homePageService;
