@@ -1,60 +1,21 @@
 package com.mywebsurfing.service;
 
-import com.mywebsurfing.entity.AppUser;
 import com.mywebsurfing.entity.Bookmark;
 import com.mywebsurfing.entity.Folder;
 import com.mywebsurfing.entity.LinkCollection;
 import com.mywebsurfing.entity.Realm;
-import com.mywebsurfing.repository.AppUserRepository;
-import com.mywebsurfing.repository.BookmarkRepository;
-import com.mywebsurfing.repository.FolderRepository;
-import com.mywebsurfing.repository.LinkCollectionRepository;
-import com.mywebsurfing.repository.RealmRepository;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class DataImportServiceTest {
+class DataImportServiceTest extends BaseDataTest {
 
     @Autowired
     private DataImportService dataImportService;
-
-    @Autowired
-    private AppUserRepository appUserRepository;
-
-    @Autowired
-    private RealmRepository realmRepository;
-
-    @Autowired
-    private FolderRepository folderRepository;
-
-    @Autowired
-    private LinkCollectionRepository linkCollectionRepository;
-
-    @Autowired
-    private BookmarkRepository bookmarkRepository;
-
-    private final AppUser defaultUser = new AppUser(null,
-            "Default User",
-            "user1",
-            "secure123",
-            "nobody@nowhere.com",
-            null);
-
-    @BeforeEach
-    private void setup() {
-        appUserRepository.save(defaultUser);
-    }
 
     @Test
     void testImportData() {
@@ -152,15 +113,6 @@ class DataImportServiceTest {
         assertEquals(0, folders.size());
         assertEquals(1, linkCollections.size());
         assertEquals(0, bookmarks.size());
-    }
-
-    @AfterEach
-    private void tearDown() {
-        bookmarkRepository.deleteAll();
-        folderRepository.deleteAll();
-        linkCollectionRepository.deleteAll();
-        realmRepository.deleteAll();
-        appUserRepository.deleteAll();
     }
 
 }
