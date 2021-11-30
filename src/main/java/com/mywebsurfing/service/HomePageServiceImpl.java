@@ -10,7 +10,6 @@ import com.mywebsurfing.repository.RealmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -29,19 +28,8 @@ public class HomePageServiceImpl implements HomePageService {
     private BookmarkRepository bookmarkRepository;
 
     @Override
-    public List<Realm> getRealms() {
-        AppUser user = appUserRepository.findByLogin("user1"); // TODO: implement real logic
+    public List<Realm> getRealms(AppUser user) {
         return realmRepository.findByAppUser(user);
-    }
-
-    @Override
-    public List<String> getMediaTypes() {
-        return Arrays.asList("Text", "Audio", "Video", "Messenger channels", "Messenger chats");
-    }
-
-    @Override
-    public List<String> getManagedAreas() {
-        return Arrays.asList("Bookmarks", "Random reminders", "Spaced repetition");
     }
 
 }

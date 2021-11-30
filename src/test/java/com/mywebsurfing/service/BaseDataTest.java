@@ -32,16 +32,21 @@ public abstract class BaseDataTest {
     @Autowired
     protected BookmarkRepository bookmarkRepository;
 
-    protected final AppUser defaultUser = new AppUser(null,
-            "Default User",
-            "user1",
-            "secure123",
-            "nobody@nowhere.com",
-            null);
+    protected AppUser defaultUser;
 
     @BeforeEach
     protected void setup() {
-        appUserRepository.save(defaultUser);
+        AppUser existingUser = appUserRepository.findByLogin("user1");
+        if (existingUser == null) {
+            defaultUser = appUserRepository.save(new AppUser(null,
+                    "Default User",
+                    "user1",
+                    "secure123",
+                    "nobody@nowhere.com",
+                    null));
+        } else {
+            defaultUser = existingUser;
+        }
     }
 
     @AfterEach

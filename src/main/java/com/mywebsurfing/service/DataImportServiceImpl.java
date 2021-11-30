@@ -14,6 +14,7 @@ import com.mywebsurfing.repository.RealmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class DataImportServiceImpl implements DataImportService {
     private BookmarkRepository bookmarkRepository;
 
     @Override
+    @Transactional
     public DataImportReport importData(String csvFileData, AppUser user) {
         Map<String, Realm> existingRealms = new HashMap<>();
         Map<String, Folder> existingFolders = new HashMap<>();
@@ -54,6 +56,7 @@ public class DataImportServiceImpl implements DataImportService {
     }
 
     @Override
+    @Transactional
     public DataImportReport importOneLine(String dataLine, AppUser user) {
         return importOneLine(dataLine, user, new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>());
     }
