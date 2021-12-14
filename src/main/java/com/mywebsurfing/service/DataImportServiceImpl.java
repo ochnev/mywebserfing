@@ -4,11 +4,11 @@ import com.mywebsurfing.dto.DataImportReport;
 import com.mywebsurfing.entity.AppUser;
 import com.mywebsurfing.entity.Bookmark;
 import com.mywebsurfing.entity.Folder;
-import com.mywebsurfing.entity.LinkCollection;
+import com.mywebsurfing.entity.TopBookmark;
 import com.mywebsurfing.entity.Realm;
 import com.mywebsurfing.repository.BookmarkRepository;
 import com.mywebsurfing.repository.FolderRepository;
-import com.mywebsurfing.repository.LinkCollectionRepository;
+import com.mywebsurfing.repository.TopBookmarkRepository;
 import com.mywebsurfing.repository.RealmRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class DataImportServiceImpl implements DataImportService {
     private FolderRepository folderRepository;
 
     @Autowired
-    private LinkCollectionRepository linkCollectionRepository;
+    private TopBookmarkRepository topBookmarkRepository;
 
     @Autowired
     private BookmarkRepository bookmarkRepository;
@@ -39,18 +39,18 @@ public class DataImportServiceImpl implements DataImportService {
     public DataImportReport importData(String csvFileData, AppUser user) {
         Map<String, Realm> existingRealms = new HashMap<>();
         Map<String, Folder> existingFolders = new HashMap<>();
-        Map<String, LinkCollection> existingLinkCollections = new HashMap<>();
+        Map<String, TopBookmark> existingTopBookmarks = new HashMap<>();
         Map<String, Bookmark> existingBookmarks = new HashMap<>();
 
         String[] lines = csvFileData.split("\n");
         DataImportReport report = Arrays.stream(lines)
-                .map(line -> importOneLine(line, user, existingRealms, existingFolders, existingLinkCollections, existingBookmarks))
+                .map(line -> importOneLine(line, user, existingRealms, existingFolders, existingTopBookmarks, existingBookmarks))
                 .reduce(new DataImportReport(), (r1, r2) -> {
             int nRealms = r1.getRealms() + r2.getRealms();
             int nFolders = r1.getFolders() + r2.getFolders();
-            int nLinkCollections = r1.getLinkCollections() + r2.getLinkCollections();
+            int nTopBookmarks = r1.getTopBookmarks() + r2.getTopBookmarks();
             int nBookmarks = r1.getBookmarks() + r2.getBookmarks();
-            return new DataImportReport(nRealms, nFolders, nLinkCollections, nBookmarks);
+            return new DataImportReport(nRealms, nFolders, nTopBookmarks, nBookmarks);
         });
         return report;
     }
@@ -65,7 +65,7 @@ public class DataImportServiceImpl implements DataImportService {
                                           AppUser user,
                                           Map<String, Realm> existingRealms,
                                           Map<String, Folder> existingFolders,
-                                          Map<String, LinkCollection> existingLinkCollections,
+                                          Map<String, TopBookmark> existingTopBookmarks,
                                           Map<String, Bookmark> existingBookmarks) {
 
         String[] parts = dataLine.split(";");
@@ -74,10 +74,10 @@ public class DataImportServiceImpl implements DataImportService {
 
         String folderName = parts[1];
         if(folderName == null || folderName.isBlank()) {
-            // create a link collection
+            // create a top bookmark directly under the realm
             String url = parts[2];
             String name = parts[3];
-            checkAndCreateLinkCollection(name, url, realm, existingLinkCollections);
+            checkAndCreateTopBookmark(name, url, realm, existingTopBookmarks);
         } else {
             // create a folder and a bookmark
             Folder folder = checkAndCreateFolder(folderName, realm, existingFolders);
@@ -86,7 +86,7 @@ public class DataImportServiceImpl implements DataImportService {
             checkAndCreateBookmark(url, title, folder, existingBookmarks);
         }
 
-        return new DataImportReport(existingRealms.size(), existingFolders.size(), existingLinkCollections.size(), existingBookmarks.size());
+        return new DataImportReport(existingRealms.size(), existingFolders.size(), existingTopBookmarks.size(), existingBookmarks.size());
     }
 
     private Realm checkAndCreateRealm(String realmName, AppUser user, Map<String, Realm> existingRealms) {
@@ -115,17 +115,17 @@ public class DataImportServiceImpl implements DataImportService {
         return folder;
     }
 
-    private LinkCollection checkAndCreateLinkCollection(String name, String url, Realm realm, Map<String, LinkCollection> existingLinkCollections) {
-        LinkCollection linkCollection = existingLinkCollections.get(url);
-        if (linkCollection == null) {
-            linkCollection = linkCollectionRepository.findByUrlAndRealm(url, realm);
-            if (linkCollection == null) {
-                linkCollection = new LinkCollection(null, name, url, realm);
-                linkCollectionRepository.save(linkCollection);
+    private TopBookmark checkAndCreateTopBookmark(String name, String url, Realm realm, Map<String, TopBookmark> existingTopBookmarks) {
+        TopBookmark topBookmark = existingTopBookmarks.get(url);
+        if (topBookmark == null) {
+            topBookmark = topBookmarkRepository.findByUrlAndRealm(url, realm);
+            if (topBookmark == null) {
+                topBookmark = new TopBookmark(null, name, url, realm);
+                topBookmarkRepository.save(topBookmark);
             }
-            existingLinkCollections.put(url, linkCollection);
+            existingTopBookmarks.put(url, topBookmark);
         }
-        return linkCollection;
+        return topBookmark;
     }
 
     private Bookmark checkAndCreateBookmark(String url, String title, Folder folder, Map<String, Bookmark> existingBookmarks) {

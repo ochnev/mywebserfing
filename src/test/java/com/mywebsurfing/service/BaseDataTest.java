@@ -4,7 +4,7 @@ import com.mywebsurfing.entity.AppUser;
 import com.mywebsurfing.repository.AppUserRepository;
 import com.mywebsurfing.repository.BookmarkRepository;
 import com.mywebsurfing.repository.FolderRepository;
-import com.mywebsurfing.repository.LinkCollectionRepository;
+import com.mywebsurfing.repository.TopBookmarkRepository;
 import com.mywebsurfing.repository.RealmRepository;
 
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +27,7 @@ public abstract class BaseDataTest {
     protected FolderRepository folderRepository;
 
     @Autowired
-    protected LinkCollectionRepository linkCollectionRepository;
+    protected TopBookmarkRepository topBookmarkRepository;
 
     @Autowired
     protected BookmarkRepository bookmarkRepository;
@@ -53,7 +53,7 @@ public abstract class BaseDataTest {
     protected void tearDown() {
         bookmarkRepository.deleteAll();
         folderRepository.deleteAll();
-        linkCollectionRepository.deleteAll();
+        topBookmarkRepository.deleteAll();
         realmRepository.deleteAll();
         appUserRepository.deleteAll();
     }

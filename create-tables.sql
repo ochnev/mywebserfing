@@ -21,7 +21,7 @@ CREATE TABLE folder (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE link_collection (
+CREATE TABLE top_bookmark (
     id BIGSERIAL,
     name VARCHAR(150) NOT NULL,
     url VARCHAR(250) NOT NULL,
@@ -37,13 +37,14 @@ CREATE TABLE bookmark (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE recurrence (
+CREATE TABLE reminder (
     id BIGSERIAL,
     url VARCHAR(250) NOT NULL,
     title VARCHAR(150) NOT NULL,
     started BOOLEAN,
     last_start TIMESTAMP,
     last_finish TIMESTAMP,
+    bookmarked BOOLEAN NOT NULL,
     app_user_id BIGINT NOT NULL REFERENCES app_user(id),
     PRIMARY KEY(id)
 );

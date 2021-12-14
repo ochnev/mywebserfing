@@ -20,8 +20,8 @@ public class DataExportServiceImpl implements DataExportService {
     @Override
     public String exportData(AppUser user) {
         List<String> bookmarkRows = exportBookmarks(user);
-        List<String> linkCollectionRows = exportLinkCollections(user);
-        return String.join("\n", bookmarkRows) + "\n" + String.join("\n", linkCollectionRows);
+        List<String> topBookmarkRows = exportTopBookmarks(user);
+        return String.join("\n", bookmarkRows) + "\n" + String.join("\n", topBookmarkRows);
     }
 
     private List<String> exportBookmarks(AppUser user) {
@@ -45,9 +45,9 @@ public class DataExportServiceImpl implements DataExportService {
         return rows;
     }
 
-    private List<String> exportLinkCollections(AppUser user) {
+    private List<String> exportTopBookmarks(AppUser user) {
         String queryText = "SELECT r.name, lc.url, lc.name " +
-                "FROM realm r JOIN link_collection lc ON lc.realm_id = r.id " +
+                "FROM realm r JOIN top_bookmark lc ON lc.realm_id = r.id " +
                 "WHERE r.app_user_id = ? " +
                 "ORDER BY r.id ASC";
         Object[] args = new Object[] { user.getId() };

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class DataImportReport {
     private int realms;
     private int folders;
-    private int linkCollections;
+    private int topBookmarks;
     private int bookmarks;
 }

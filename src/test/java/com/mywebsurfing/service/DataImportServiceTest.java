@@ -2,7 +2,7 @@ package com.mywebsurfing.service;
 
 import com.mywebsurfing.entity.Bookmark;
 import com.mywebsurfing.entity.Folder;
-import com.mywebsurfing.entity.LinkCollection;
+import com.mywebsurfing.entity.TopBookmark;
 import com.mywebsurfing.entity.Realm;
 
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class DataImportServiceTest extends BaseDataTest {
         List<Realm> realms = realmRepository.findAll();
         List<Realm> realmsForUser = realmRepository.findByAppUser(defaultUser);
         List<Folder> folders = folderRepository.findAll();
-        List<LinkCollection> linkCollections = linkCollectionRepository.findAll();
+        List<TopBookmark> topBookmarks = topBookmarkRepository.findAll();
         List<Bookmark> bookmarks = bookmarkRepository.findAll();
 
         assertEquals(2, realms.size());
@@ -58,11 +58,11 @@ class DataImportServiceTest extends BaseDataTest {
         assertEquals(realm2u.getId(), folder3.getRealm().getId());
         assertEquals("German", folder3.getName());
 
-        assertEquals(1, linkCollections.size());
-        LinkCollection linkCollection1 = linkCollections.get(0);
-        assertEquals(realm1.getId(), linkCollection1.getRealm().getId());
-        assertEquals("https://github.com/crytic/awesome-ethereum-security", linkCollection1.getUrl());
-        assertEquals("Awesome Ethereum Security", linkCollection1.getName());
+        assertEquals(1, topBookmarks.size());
+        TopBookmark topBookmark1 = topBookmarks.get(0);
+        assertEquals(realm1.getId(), topBookmark1.getRealm().getId());
+        assertEquals("https://github.com/crytic/awesome-ethereum-security", topBookmark1.getUrl());
+        assertEquals("Awesome Ethereum Security", topBookmark1.getName());
 
         assertEquals(3, bookmarks.size());
         Bookmark bookmark1 = bookmarks.get(0);
@@ -87,13 +87,13 @@ class DataImportServiceTest extends BaseDataTest {
         List<Realm> realms = realmRepository.findAll();
         List<Realm> realmsForUser = realmRepository.findByAppUser(defaultUser);
         List<Folder> folders = folderRepository.findAll();
-        List<LinkCollection> linkCollections = linkCollectionRepository.findAll();
+        List<TopBookmark> topBookmarks = topBookmarkRepository.findAll();
         List<Bookmark> bookmarks = bookmarkRepository.findAll();
 
         assertEquals(1, realms.size());
         assertEquals(1, realmsForUser.size());
         assertEquals(1, folders.size());
-        assertEquals(0, linkCollections.size());
+        assertEquals(0, topBookmarks.size());
         assertEquals(1, bookmarks.size());
     }
 
@@ -105,13 +105,13 @@ class DataImportServiceTest extends BaseDataTest {
         List<Realm> realms = realmRepository.findAll();
         List<Realm> realmsForUser = realmRepository.findByAppUser(defaultUser);
         List<Folder> folders = folderRepository.findAll();
-        List<LinkCollection> linkCollections = linkCollectionRepository.findAll();
+        List<TopBookmark> topBookmarks = topBookmarkRepository.findAll();
         List<Bookmark> bookmarks = bookmarkRepository.findAll();
 
         assertEquals(1, realms.size());
         assertEquals(1, realmsForUser.size());
         assertEquals(0, folders.size());
-        assertEquals(1, linkCollections.size());
+        assertEquals(1, topBookmarks.size());
         assertEquals(0, bookmarks.size());
     }
 
